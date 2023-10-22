@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Форма Отзывов</title>
+</head>
+<body>
+  <h1>Оставьте ваш отзыв</h1>
+
+  <form id="feedbackForm">
+    <label for="name">Ваше имя:</label>
+    <input type="text" id="name" required><br><br>
+
+    <label for="feedback">Ваш отзыв:</label>
+    <textarea id="feedback" rows="4" required></textarea><br><br>
+
+    <button type="submit" style="background-color: grey; color: white;">Отправить отзыв</button>
+  </form>
+
+  <div id="feedbackMessages"></div>
+
+  <script>
+    const feedbackForm = document.getElementById("feedbackForm");
+    const feedbackMessages = document.getElementById("feedbackMessages");
+
+    feedbackForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const feedbackText = document.getElementById("feedback").value;
+
+      // Создайте элемент для отображения отзыва
+      const feedbackElement = document.createElement("div");
+      feedbackElement.className = "feedback-entry";
+      feedbackElement.innerHTML = `<strong>${name}:</strong> ${feedbackText}`;
+
+      // Очистите поля ввода
+      document.getElementById("name").value = "";
+      document.getElementById("feedback").value = "";
+
+      // Отобразите отзыв
+      feedbackMessages.appendChild(feedbackElement);
+
+      // Показать всплывающее уведомление
+      showNotification("Отзыв отправлен!");
+    });
+
+    // Функция для отображения уведомления
+    function showNotification(message) {
+      const notification = document.createElement("div");
+      notification.className = "notification";
+      notification.innerText = message;
+      document.body.appendChild(notification);
+
+      // Удалить уведомление через 3 секунды
+      setTimeout(function () {
+        notification.style.display = "none";
+      }, 3000);
+    }
+  </script>
+
+  <style>
+    .feedback-entry {
+      margin-bottom: 10px;
+    }
+
+    .notification {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #4CAF50;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      display: block;
+    }
+  </style>
+</body>
+</html>

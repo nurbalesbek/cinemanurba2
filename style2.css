@@ -118,9 +118,15 @@ text-align: center;
 .dwer{
   text-align: center;
 }
-.navbar navbar-expand-lg navbar-light bg-light{
-  color: blue;
+.container-fluid{
+  color: black;
 }
 .carousel slide{
   width: 10px;
+}
+.ooo{
+  font-size: 200%;
+}
+.cass{
+  color: inherit;
 }
