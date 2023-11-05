@@ -1,77 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Форма Отзывов</title>
+    <title>Movie Sales Chart</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <style>
+        .chart-container {
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        .bar {
+            fill: steelblue;
+        }
+
+        .bar:hover {
+            fill: orange;
+        }
+    </style>
 </head>
 <body>
-  <h1>Оставьте ваш отзыв</h1>
+    <div class="container">
+        <h1>Movie Sales Chart</h1>
+        <div class="chart-container" id="chart-container"></div>
+    </div>
 
-  <form id="feedbackForm">
-    <label for="name">Ваше имя:</label>
-    <input type="text" id="name" required><br><br>
+    <script>
+        var data = [
+            { movie: 'Wall-E', sales: 500 },
+            { movie: '1+1', sales: 800 },
+            { movie: 'Titanic', sales: 1200 },
+            { movie: 'No Country for Old Men', sales: 300 },
+        ];
 
-    <label for="feedback">Ваш отзыв:</label>
-    <textarea id="feedback" rows="4" required></textarea><br><br>
+        var margin = { top: 20, right: 30, bottom: 40, left: 40 },
+            width = 400 - margin.left - margin.right,
+            height = 300 - margin.top - margin.bottom;
 
-    <button type="submit" style="background-color: grey; color: white;">Отправить отзыв</button>
-  </form>
+        var svg = d3.select("#chart-container")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  <div id="feedbackMessages"></div>
+        var x = d3.scaleBand()
+            .range([0, width])
+            .padding(0.1);
 
-  <script>
-    const feedbackForm = document.getElementById("feedbackForm");
-    const feedbackMessages = document.getElementById("feedbackMessages");
+        var y = d3.scaleLinear()
+            .range([height, 0]);
 
-    feedbackForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const name = document.getElementById("name").value;
-      const feedbackText = document.getElementById("feedback").value;
+        x.domain(data.map(function(d) { return d.movie; }));
+        y.domain([0, d3.max(data, function(d) { return d.sales; })]);
 
-      // Создайте элемент для отображения отзыва
-      const feedbackElement = document.createElement("div");
-      feedbackElement.className = "feedback-entry";
-      feedbackElement.innerHTML = `<strong>${name}:</strong> ${feedbackText}`;
+        svg.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return x(d.movie); })
+            .attr("width", x.bandwidth())
+            .attr("y", function(d) { return y(d.sales); })
+            .attr("height", function(d) { return height - y(d.sales); });
 
-      // Очистите поля ввода
-      document.getElementById("name").value = "";
-      document.getElementById("feedback").value = "";
+        svg.append("g")
+            .attr("class", "x-axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
 
-      // Отобразите отзыв
-      feedbackMessages.appendChild(feedbackElement);
+        svg.append("g")
+            .attr("class", "y-axis")
+            .call(d3.axisLeft(y));
 
-      // Показать всплывающее уведомление
-      showNotification("Отзыв отправлен!");
-    });
-
-    // Функция для отображения уведомления
-    function showNotification(message) {
-      const notification = document.createElement("div");
-      notification.className = "notification";
-      notification.innerText = message;
-      document.body.appendChild(notification);
-
-      // Удалить уведомление через 3 секунды
-      setTimeout(function () {
-        notification.style.display = "none";
-      }, 3000);
-    }
-  </script>
-
-  <style>
-    .feedback-entry {
-      margin-bottom: 10px;
-    }
-
-    .notification {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: #4CAF50;
-      color: white;
-      padding: 10px;
-      border-radius: 5px;
-      display: block;
-    }
-  </style>
+        // Добавление меток на графике
+        svg.selectAll("text.bar-label")
+            .data(data)
+            .enter().append("text")
+            .attr("class", "bar-label")
+            .attr("text-anchor", "middle")
+            .attr("x", function(d) { return x(d.movie) + x.bandwidth() / 2; })
+            .attr("y", function(d) { return y(d.sales) - 10; })
+            .text(function(d) { return d.sales; });
+    </script>
 </body>
 </html>
