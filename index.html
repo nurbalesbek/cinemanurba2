@@ -77,6 +77,76 @@
             font-family: 'Cursive', cursive;
         }
     </style>
+    <style>
+      #scrollBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 10px;
+        background-color: #333;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+
+    <style>
+       /* Стили для всего контента */
+       html, body {
+         height: 100%;
+         margin: 0;
+         padding: 0;
+       }
+
+       /* Стили для футера */
+       #footer {
+         background-color: #333;
+         color: white;
+         text-align: center;
+         padding: 10px 0;
+         width: 100%;
+       }
+
+       .wrapper {
+         display: flex;
+         flex-direction: column;
+         min-height: 100%;
+       }
+
+       .content {
+         flex: 1;
+       }
+
+       .social-icons {
+         display: flex;
+         justify-content: center;
+         margin-bottom: 10px;
+       }
+
+       .social-icons a {
+         margin: 0 10px;
+         color: white;
+         text-decoration: none;
+       }
+
+       .social-icons a:hover {
+         color: #ffcc00;
+       }
+
+       .social-icons img {
+         width: 30px;
+         height: 30px;
+         margin-bottom: 5px;
+       }
+
+       p {
+         margin: 0;
+         font-size: 14px;
+       }
+     </style>
+
 
 
 </head>
@@ -691,75 +761,353 @@
       </div>
     </div>
 
-
-
     <div class="container">
-      <center>  <h1 style="font-family: 'Cursive', cursive;">Movie Quiz</h1> </center>
-        <div class="row">
-            <div class="col-md-6">
-                <h2 style="font-family: 'Cursive', cursive;">Movie Descriptions</h2>
-                <ul id="sortable1" class="list-group">
-                    <li class="list-group-item" style="font-family: 'Cursive', cursive;">In a future where humans have destroyed Earth, a robot named Wall-E falls in love with another robot named Eve.</li>
-                    <li class="list-group-item" style="font-family: 'Cursive', cursive;">A quadriplegic aristocrat hires a young man from the projects to be his caregiver in this heartwarming story.</li>
-                    <li class="list-group-item" style="font-family: 'Cursive', cursive;">The epic romance and disaster film about the sinking of the Titanic.</li>
-                    <li class="list-group-item" style="font-family: 'Cursive', cursive;">An aging hitman and a thief with dementia team up for one last job in this action-comedy.</li>
-                </ul>
-            </div>
-            <div class="col-md-6">
-                <h2 style="font-family: 'Cursive', cursive;">Movies</h2>
-                <ul id="sortable2" class="list-group">
-                    <li class="list-group-item"><span class="movie-name">Wall-E</span></li>
-                    <li class="list-group-item"><span class="movie-name">1+1</span></li>
-                    <li class="list-group-item"><span class="movie-name">Titanic</span></li>
-                    <li class="list-group-item"><span class="movie-name">No Country for Old Men</span></li>
-                </ul>
-            </div>
-        </div>
-        <button id="checkButton" class="btn btn-primary" style="font-family: 'Cursive', cursive;">Done</button>
-        <div id="message" class="alert" style="display: none;"></div>
+    <center><h1 style="font-family: 'Cursive', cursive;">Movie Quiz</h1></center>
+    <div class="row">
+      <div class="col-md-6">
+        <h2 style="font-family: 'Cursive', cursive;">Movie Descriptions</h2>
+        <ul id="sortable1" class="list-group">
+          <li class="list-group-item" style="font-family: 'Cursive', cursive;">In a future where humans have destroyed Earth, a robot named Wall-E falls in love with another robot named Eve.</li>
+          <li class="list-group-item" style="font-family: 'Cursive', cursive;">A quadriplegic aristocrat hires a young man from the projects to be his caregiver in this heartwarming story.</li>
+          <li class="list-group-item" style="font-family: 'Cursive', cursive;">The epic romance and disaster film about the sinking of the Titanic.</li>
+          <li class="list-group-item" style="font-family: 'Cursive', cursive;">An aging hitman and a thief with dementia team up for one last job in this action-comedy.</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h2 style="font-family: 'Cursive', cursive;">Movies</h2>
+        <ul id="sortable2" class="list-group">
+          <li class="list-group-item"><span class="movie-name">Wall-E</span></li>
+          <li class="list-group-item"><span class="movie-name">1+1</span></li>
+          <li class="list-group-item"><span class="movie-name">Titanic</span></li>
+          <li class="list-group-item"><span class="movie-name">No Country for Old Men</span></li>
+        </ul>
+      </div>
     </div>
+    <button id="checkButton" class="btn btn-primary" style="font-family: 'Cursive', cursive;">Done</button>
+    <div id="message" class="alert" style="display: none;"></div>
+  </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    <script>
-        $(function() {
-            $(".movie-name").css("pointer-events", "none");
+  <script>
+    $(function() {
+      $(".movie-name").css("pointer-events", "none");
 
-            $("#sortable2").sortable({
-                connectWith: ".list-group",
-                placeholder: "ui-state-highlight",
-            });
+      // Функция для перемешивания массива случайным образом
+      function shuffleArray(array) {
+        for (var i = array.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = array[i];
+          array[i] = array[j];
+          array[j] = temp;
+        }
+        return array;
+      }
 
-            $("#checkButton").click(function() {
-                var movieOrder = ["Wall-E", "1+1", "Titanic", "No Country for Old Men"];
-                var currentOrder = $("#sortable2 .movie-name").map(function() {
-                    return $(this).text();
-                }).get();
+      // Названия фильмов
+      var movies = ["Wall-E", "1+1", "Titanic", "No Country for Old Men"];
 
-                var isCorrect = true;
-                for (var i = 0; i < movieOrder.length; i++) {
-                    if (movieOrder[i] !== currentOrder[i]) {
-                        isCorrect = false;
-                        break;
-                    }
-                }
+      // Перемешиваем порядок названий фильмов каждый раз при загрузке страницы
+      movies = shuffleArray(movies);
 
-                var message = $("#message");
-                if (isCorrect) {
-                    message.removeClass("alert-danger").addClass("alert-success").text("Молодец!");
-                } else {
-                    message.removeClass("alert-success").addClass("alert-danger").text("Попробуй еще раз");
-                }
+      // Устанавливаем случайный порядок на правой стороне
+      $("#sortable2 .movie-name").each(function(index) {
+        $(this).text(movies[index]);
+      });
 
-                message.show();
-            });
-        });
-    </script>
+      $("#sortable2").sortable({
+        connectWith: ".list-group",
+        placeholder: "ui-state-highlight",
+      });
+
+      $("#checkButton").click(function() {
+        var currentOrder = $("#sortable2 .movie-name").map(function() {
+          return $(this).text();
+        }).get();
+
+        // Проверка порядка названий фильмов
+        var isCorrect = JSON.stringify(currentOrder) === JSON.stringify(["Wall-E", "1+1", "Titanic", "No Country for Old Men"]);
+
+        var message = $("#message");
+        if (isCorrect) {
+          message.removeClass("alert-danger").addClass("alert-success").text("Молодец!");
+        } else {
+          message.removeClass("alert-success").addClass("alert-danger").text("Попробуй еще раз");
+        }
+
+        message.show();
+      });
+    });
+  </script>
 
 
 
 <br><br>
+
+
+<div class="container mt-5">
+
+  <div class="card mb-3">
+    <div class="card-header">
+      1.  Какой фильм получил оскар в 2019 году?
+    </div>
+    <div class="card-body">
+      <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="q1a" name="q1" value="a">
+        <label class="custom-control-label" for="q1a">Восход</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="q1b" name="q1" value="b">
+        <label class="custom-control-label" for="q1b">Паразиты</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="q1c" name="q1" value="c">
+        <label class="custom-control-label" for="q1c">Ла Ла Ленд</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header">
+      2. Какое имя у главного персонажа в фильме "Зеленая миля"?
+    </div>
+    <div class="card-body">
+      <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="q2a" name="q2" value="a">
+        <label class="custom-control-label" for="q2a">Джон Коффи</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="q2b" name="q2" value="b">
+        <label class="custom-control-label" for="q2b">Уильям Уилсон</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="q2c" name="q2" value="c">
+        <label class="custom-control-label" for="q2c">Пол Эджкомб</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header">
+      3. Прозвище наемного убийцы в фильме "Старикам тут не место"?'
+    </div>
+    <div class="card-body">
+      <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="q3a" name="q3" value="a">
+        <label class="custom-control-label" for="q3a">Топор</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="q3b" name="q3" value="b">
+        <label class="custom-control-label" for="q3b">Бита</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="q3c" name="q3" value="c">
+        <label class="custom-control-label" for="q3c">Чигур</label>
+      </div>
+    </div>
+  </div>  <div class="card mb-3">
+      <div class="card-header">
+        4. В каком фильме звучит фраза: "Я поеду с тобой до конца времён"?
+      </div>
+      <div class="card-body">
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" id="q4a" name="q4" value="a">
+          <label class="custom-control-label" for="q4a">Титаник</label>
+        </div>
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" id="q4b" name="q4" value="b">
+          <label class="custom-control-label" for="q4b">Зодиак</label>
+        </div>
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" id="q4c" name="q4" value="c">
+          <label class="custom-control-label" for="q4c">Неприкасаемые</label>
+        </div>
+      </div>
+    </div>  <div class="card mb-3">
+        <div class="card-header">
+          5. Какое животное стало символом франшизы "Пираты Карибского моря"?
+        </div>
+        <div class="card-body">
+          <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="q5a" name="q5" value="a">
+            <label class="custom-control-label" for="q5a">Дельфин</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="q5b" name="q5" value="b">
+            <label class="custom-control-label" for="q5b">Осьминог</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="q5c" name="q5" value="c">
+            <label class="custom-control-label" for="q5c">Попугай</label>
+          </div>
+        </div>
+      </div>  <div class="card mb-3">
+          <div class="card-header">
+            6. Какой фильм стал первым полнометражным анимационным фильмом от Pixar?
+          </div>
+          <div class="card-body">
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" id="q6a" name="q6" value="a">
+              <label class="custom-control-label" for="q6a">Тачки</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" id="q6b" name="q6" value="b">
+              <label class="custom-control-label" for="q6b">История игрушек</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" id="q6c" name="q6" value="c">
+              <label class="custom-control-label" for="q6c">Валли</label>
+            </div>
+          </div>
+        </div>  <div class="card mb-3">
+            <div class="card-header">
+              7. Вопрос 6: Сколько частей у фильма "Пила?
+            </div>
+            <div class="card-body">
+              <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" id="q7a" name="q7" value="a">
+                <label class="custom-control-label" for="q7a">9</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" id="q7b" name="q7" value="b">
+                <label class="custom-control-label" for="q7b">10</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" id="q7c" name="q7" value="c">
+                <label class="custom-control-label" for="q7c">12</label>
+              </div>
+            </div>
+          </div>  <div class="card mb-3">
+              <div class="card-header">
+                8. Какой фильм стал первым в серии фильмов о героях Marvel?
+              </div>
+              <div class="card-body">
+                <div class="custom-control custom-radio">
+                  <input type="radio" class="custom-control-input" id="q8a" name="q8" value="a">
+                  <label class="custom-control-label" for="q8a">Невероятный Халк</label>
+                </div>
+                <div class="custom-control custom-radio">
+                  <input type="radio" class="custom-control-input" id="q8b" name="q8" value="b">
+                  <label class="custom-control-label" for="q8b">Человек-паук</label>
+                </div>
+                <div class="custom-control custom-radio">
+                  <input type="radio" class="custom-control-input" id="q8c" name="q8" value="c">
+                  <label class="custom-control-label" for="q8c">Железный человек</label>
+                </div>
+              </div>
+            </div>  <div class="card mb-3">
+                <div class="card-header">
+                  9.  Какой фильм получил Оскар за лучший анимационный фильм в 2021 году?
+                </div>
+                <div class="card-body">
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="q9a" name="q9" value="a">
+                    <label class="custom-control-label" for="q9a">Клаус</label>
+                  </div>
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="q9b" name="q9" value="b">
+                    <label class="custom-control-label" for="q9b">Душа</label>
+                  </div>
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="q9c" name="q9" value="c">
+                    <label class="custom-control-label" for="q9c">Зверополис</label>
+                  </div>
+                </div>
+              </div>  <div class="card mb-3">
+                  <div class="card-header">
+                    10. Как зовут вторую личность главного героя в фильме "Бойцовский Клуб"
+                  </div>
+                  <div class="card-body">
+                    <div class="custom-control custom-radio">
+                      <input type="radio" class="custom-control-input" id="q10a" name="q10" value="a">
+                      <label class="custom-control-label" for="q10a">Тайлер Дерден</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                      <input type="radio" class="custom-control-input" id="q10b" name="q10" value="b">
+                      <label class="custom-control-label" for="q10b">Адам Сендлер</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                      <input type="radio" class="custom-control-input" id="q10c" name="q10" value="c">
+                      <label class="custom-control-label" for="q10c">Джош Пек</label>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
+
+  <button onclick="calculateScore()" class="btn btn-primary">Submit</button>
+  <p id="result"></p>
+</div>
+
+<script>
+  function calculateScore() {
+    var score = 0;
+
+    // Question 1
+    var q1 = document.querySelector('input[name="q1"]:checked');
+    if (q1 && q1.value === "b") {
+      score += 1;
+    }
+
+    // Question 2
+    var q2 = document.querySelector('input[name="q2"]:checked');
+    if (q2 && q2.value === "a") {
+      score += 1;
+    }
+
+    // Question 3
+    var q3 = document.querySelector('input[name="q3"]:checked');
+    if (q3 && q3.value === "c") {
+      score += 1;
+    }
+
+    // Question 4
+    var q4 = document.querySelector('input[name="q4"]:checked');
+    if (q4 && q4.value === "a") {
+      score += 1;
+    }  // Question 5
+      var q5 = document.querySelector('input[name="q5"]:checked');
+      if (q5 && q5.value === "c") {
+        score += 1;
+      }
+
+      // Question 6
+      var q6 = document.querySelector('input[name="q6"]:checked');
+      if (q6 && q6.value === "b") {
+        score += 1;
+      }  // Question 7
+        var q7 = document.querySelector('input[name="q7"]:checked');
+        if (q7 && q7.value === "a") {
+          score += 1;
+        }
+
+        // Question 8
+        var q8 = document.querySelector('input[name="q8"]:checked');
+        if (q8 && q8.value === "c") {
+          score += 1;
+        }  // Question 9
+          var q9 = document.querySelector('input[name="q9"]:checked');
+          if (q9 && q9.value === "b") {
+            score += 1;
+          }
+
+          // Question 10
+          var q10 = document.querySelector('input[name="q10"]:checked');
+          if (q10 && q10.value === "a") {
+            score += 1;
+          }
+    // Add more questions similarly
+
+    // Display the result
+    var resultElement = document.getElementById('result');
+    resultElement.textContent = 'Your score is: ' + score + '/10';
+  }
+</script>
+
 
 <center>
     <h1>Поставь таймер для просмотров</h1>
@@ -822,6 +1170,54 @@
             }
         });
     </script>
+
+
+
+
+    <button id="scrollBtn">Наверх</button>
+
+    <script>
+      // Показываем кнопку, когда прокрутка больше высоты экрана
+      $(window).scroll(function() {
+        if ($(this).scrollTop() > 20) {
+          $('#scrollBtn').fadeIn();
+        } else {
+          $('#scrollBtn').fadeOut();
+        }
+      });
+
+      // Скролл на самый верх при клике на кнопку
+      $('#scrollBtn').click(function() {
+        $('html, body').animate({scrollTop : 0},800);
+        return false;
+      });
+
+    </script>
+    <!-- Ваш контент -->
+
+
+    <div class="wrapper">
+      <div class="content">
+        <!-- Ваш контент -->
+      </div>
+
+      <div id="footer">
+        <div class="social-icons">
+          <a href="https://www.instagram.com/" target="_blank">
+            <img src="https://www.flaticon.com/ru/download/icon/2111463?icon_id=2111463&author=190&team=190&keyword=instagram&pack=packs%2Fsocial-logo-3&style=861&format=png&color=%23000000&colored=2&size=512&selection=1&premium=0&type=standard" alt="Instagram">
+            <br>
+            Instagram
+          </a>
+          <a href="https://www.youtube.com/" target="_blank">
+            <img src="https://www.flaticon.com/ru/download/icon/1384060?icon_id=1384060&author=1&team=1&keyword=youtube&pack=packs%2Fsocial-media-89&style=1222&format=png&color=%23000000&colored=2&size=512&selection=1&premium=0&type=standard&token=03AFcWeA6Fqhy3rd2FYBcT4T5NsR_OM9lxYM-2EAWFYvO5fWJbMu4cjQKYRj-Mmq0mvMJ-oa8xUwchjupaEtDkkNsrK4uYEMpUbqyVLG1mtCw31UIQLfPpXgUflRjE2RHzieMgLrdrC4H9Wwi7tjMj1clmqJaduus7BDGFMlea_rAmZWFREkrzdvaUg6C-k92Qje3tsBa43gU3cjfUeCY9wNIQTviKvKEo2mn_A4rjgLDq-zmn2UWoa99IwmhE3qS6EazdsBPGcGb1GSyo4KKxpXhpIA1azYxHJ5oThFENkYle0D2mv1GdHcNll7ywO7erqURHOgjDVH5AAUSWeUbId200Nhrc1GGRjZlYKxQsaQXtaYAlXidFOr3LpJu_rXAaL7a0PhmCxA24_uZm-yQ1tt2eVzx6j95ezN4plsJfRgHQY8nFAd2VsiuYDCMeRSuAo0Rma-fgYhgSmclmj20phS71iRRjcDVJjals4DwlZ2MksDEc8rIgFJP59DgumCoF9G_z4m63Q1i0vRrc0jdisGKvfSmxphHqf6MyPKbxtLZo11rf6zHN51Olts3hQQvk6QgvPYkeJvTiscy_jXfZiRBPYtZNXLnd0pV3ALJLY0wrYeegJ9aECNpBkbJn5hnrOnz8gu_okjD8qHjhBdxJ6d3sok9maJwBi4SfxIeGfuY4PYaVjEa1ITvnZlK4t8VGLAANbV_y0A9WgsmrJ2gmp7FamQPZJrRLAz7Ow8HtlEJq9ICjxjUB4V0R3gvbOTqPXttfEBnH8csu5-cMo1O8ywH_gRc2Fl3lQBrih0ryJ1m5HDnzRxnLQWqxdo4Wkp4ptcX194308MBAIf3Vz9Smw51nWSQNJVK9gml4q1d8rGG_G9vnSI7eRFpmXRJ6m-1k2vBdDi6oUynUsUlYi4vux1X0-a09HxpPNuPq8eyA89MwMLiCDa2WBMd3diwZImjqkbSm8tImbkekG_rIRnG0f2sPBsfQuw88WuJuVhpm-s1fcWAjFw_WYxLgaxHtF94kknPGxkmLrHMyrUm6Mm6tRyLzZ2OG1Y7_1aGPMbuG8PYbuOv7AD8gGTkdIHG74A9rerQlD7E3Q6I9-QLwH-bUNvpxWG7l92NwjMNZZcf42GoBb9lYjYkUxaaSOS3c7z8-Xeozz7x1u7mClEzSjC3JoRk3zD1DxwvHfrHfdjkvVTqE-r7l9iUb_0AJ7fzpq7rY8F5Htx4nCTDeDqMm0EBbZcwTLN8XQ-AWOW0rUidwWtBXw3cCOuP-IpbLJFpC4axRhiAejvOjuycnlnZR2T0lBW-B0xoaMnH43tE7AWj-VN88oaZmXQ3cUES-GC1Wi-kgGkCyPayFMp0eoFPSRbTUUxlHLUGY_jeGoWj_zfBcvSVsdaMSUE1nzNtj5Vff-c89KnfgrCMs4W92EkDNehWwL2WG1bz2TGp5yEUYOh9Tk5GDgSxsBN_3XQ0R2feHBAbtBOfKGjJGXVSbIHd3SWMlcxT73yKf1-V1o263RW7wkTAixUsjvjMc5gRYnT52KAf4CShTnUdAZJeOLy1Tdl6FETAJWd6csirSpR_HWIz6tNfEiyg7t3PlXPZbY_idSy--v9Pxl1Iivi9x" alt="YouTube">
+            <br>
+            YouTube
+          </a>
+        </div>
+        <p>© 2023 Venom Movie.</p>
+      </div>
+    </div>
+
 </center>
 </body>
 </html>
